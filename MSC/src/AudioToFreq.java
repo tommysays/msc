@@ -111,6 +111,7 @@ public class AudioToFreq {
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD); //The class that performs fourier transforms
         int[] volBuffer = new int[30];  //A buffer to hold the volume of the last 30 frames
         int nextVol = 0;                //To keep the position you are in. in the volume buffer
+        int curVolume;
         
         Arrays.fill(volBuffer, 0);
         
