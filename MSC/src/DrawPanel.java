@@ -51,7 +51,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 musicTask = new TimerTask(){
                     public void run(){
                         AudioToFreq.running = true;
-                        AudioToFreq.PlaySongAndTransform("/rawk.mp3");
+                        AudioToFreq.PlaySongAndTransform("/party.mp3");
                     }
                 };
 		tmr.schedule(task, 0, interval);
