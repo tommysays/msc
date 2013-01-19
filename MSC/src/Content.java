@@ -32,8 +32,9 @@ public class Content
             System.out.println("\n" + response_string);
             getTracks(response_string);
             
-            //lets try out a sample
-            stream[0] = new Stream(url[0], stream_url[0], response);    
+            response = wrapper.get(Request.to(url[0]));
+            response_string = Http.formatJSON(Http.getString(response));
+            System.out.println("\n----------------\n" + response_string);
             
         } 
         else 
