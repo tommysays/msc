@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Graphics;
 
 /**
@@ -6,6 +7,10 @@ import java.awt.Graphics;
 public abstract class Speaker{
 	protected double counter = 0;
 	protected int xLoc = 0, yLoc = 0;
+	protected int WIDTH = 50, HEIGHT = 50;
+	protected Color REG_COLOR = Color.WHITE;
+	protected double LIMIT = (3.14 / 2);
+	protected boolean increment = false;
 
 	/**
 	 * Sets the location of the speaker.
@@ -18,6 +23,11 @@ public abstract class Speaker{
 		yLoc = y;
 	}
 
+	public void paint(Graphics g){
+		g.setColor(REG_COLOR);
+		g.fillRect(xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT);
+	}
+
 	/**
 	 * Spawns a bullet.
 	 */
@@ -26,10 +36,14 @@ public abstract class Speaker{
 	/**
 	 * Does something.
 	 */
-	public abstract void animate();
-
-	/**
-	 * Paints the speaker.
-	 */
-	public void paint(Graphics g){}
+	public void animate(){
+		if (increment){
+			counter += (3.14 / 40);
+		} else{
+			counter -= (3.14 / 40);
+		}
+		if (Math.abs(counter) >= LIMIT){
+			increment = !increment;
+		}
+	}
 }

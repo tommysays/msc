@@ -12,11 +12,12 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private final Color BOX_COLOR = new Color(200, 220, 255);
 	private final int BOX_WIDTH = 10, BOX_HEIGHT = 10;
 	private int xLoc = 50, yLoc = 50;
+	private int xDest = 50, yDest = 50;
 	private static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	private static ArrayList<Speaker> speakers = new ArrayList<Speaker>();
 	private Timer tmr;
 	private TimerTask task;
-	private int interval = 15;
+	private int interval = 20;
 	private int spawnInterval = 2;
 	private int counter = 0;
 
@@ -27,6 +28,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	public void reset(){
 		xLoc = (this.getWidth() + BOX_WIDTH) / 2;
 		yLoc = (this.getHeight() + BOX_HEIGHT) / 2;
+		xDest = xLoc;
+		yDest = yLoc;
 		bullets = new ArrayList<Bullet>();
 		speakers = new ArrayList<Speaker>();
 	}
@@ -52,6 +55,16 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private void tick(){
 		for (int i = 0; i < bullets.size(); ++i){
 			Bullet bl = bullets.get(i);
+			int bx = bl.getX();
+			int by = bl.getY();
+			int bWidth = bl.getWidth();
+			int bHeight = bl.getHeight();
+			if (xLoc >= bx - bWidth / 2 && xLoc <= bx + bWidth / 2){
+				if (yLoc >= by - bHeight / 2 && yLoc <= by + bHeight / 2){
+					Main.gameOver();
+					return;
+				}
+			}
 			bl.animate();
 			if (bl.getX() < 0 || bl.getX() > this.getWidth() ||
 					bl.getY() < 0 || bl.getY() > this.getHeight()){
@@ -70,6 +83,12 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 			}
 			counter = 0;
 		}
+		if (xLoc != xDest){
+			xLoc -= (xLoc - xDest) / 3;
+		}
+		if (yLoc != yDest){
+			yLoc -= (yLoc - yDest) / 3;
+		}
 		repaint();
 	}
 
@@ -87,7 +106,13 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	 * Currently only adds 1 base speaker.
 	 */
 	public void initSpeakers(){
-		speakers.add(new BaseSpeaker(this.getWidth() / 2, 50));
+		//Top-Middle LowSpeaker.
+		speakers.add(new LowSpeaker(this.getWidth() / 2, 50));
+		//Three HighSpeakers
+		speakers.add(new HighSpeaker(this.getWidth() / 4, 150));
+		speakers.add(new HighSpeaker(this.getWidth() / 2, 150));
+		speakers.add(new HighSpeaker(this.getWidth() * 3 / 4, 150));
+
 	}
 
 	public void paint(Graphics g){
@@ -101,16 +126,16 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 			bl.paint(g);
 		}
 		g.setColor(BOX_COLOR);
-		g.fillRect(xLoc, yLoc, BOX_WIDTH, BOX_HEIGHT);
+		g.fillRect(xLoc - BOX_WIDTH / 2, yLoc - BOX_HEIGHT / 2, BOX_WIDTH, BOX_HEIGHT);
 	}
 	public void mouseMoved(MouseEvent me){
-		xLoc = me.getPoint().x - BOX_WIDTH / 2;
-		yLoc = me.getPoint().y - BOX_HEIGHT / 2;
+		xDest = me.getPoint().x - BOX_WIDTH / 2;
+		yDest = me.getPoint().y - BOX_HEIGHT / 2;
 //		repaint();
 	}
 	public void mouseDragged(MouseEvent me){
-		xLoc = me.getPoint().x - BOX_WIDTH / 2;
-		yLoc = me.getPoint().y - BOX_HEIGHT / 2;
+		xDest = me.getPoint().x - BOX_WIDTH / 2;
+		yDest = me.getPoint().y - BOX_HEIGHT / 2;
 //		repaint();
 	}
 }

@@ -1,16 +1,18 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 
 /**
  * Emulates a bullet that follows a function to determine its path.
  */
 public class Bullet{
-	private double xLoc, yLoc;
-	private double direction;
-	private final Color BULLET_COLOR = Color.RED;
-	private final int BULLET_WIDTH = 8;
-	private final int BULLET_HEIGHT = 8;
-	private final double SPD = 5;
+	protected double xLoc, yLoc;
+	protected double direction;
+	protected Image img;
+	protected final Color BULLET_COLOR = Color.RED;
+	protected int BULLET_WIDTH = 8;
+	protected int BULLET_HEIGHT = 8;
+	protected double SPD = 3;
 	/**
 	 * Creates a bullet at the specified location with a certain direction.
 	 *
@@ -24,16 +26,34 @@ public class Bullet{
 		this.direction = direction;
 	}
 
+	public Bullet(int x, int y, double direction, Image img){
+		xLoc = x;
+		yLoc = y;
+		this.direction = direction;
+		this.img = img;
+	}
+
 	public int getX(){
 		return (int)xLoc;
 	}
 	public int getY(){
 		return (int)yLoc;
 	}
+	public int getWidth(){
+		return BULLET_WIDTH;
+	}
+	public int getHeight(){
+		return BULLET_HEIGHT;
+	}
 	
 	public void paint(Graphics g){
+		if (img == null){
 		g.setColor(BULLET_COLOR);
 		g.fillOval((int)xLoc - BULLET_WIDTH / 2, (int)yLoc - BULLET_HEIGHT / 2, BULLET_WIDTH, BULLET_HEIGHT);
+		} else{
+			g.drawImage(img, (int)xLoc - BULLET_WIDTH / 2, (int)yLoc - BULLET_HEIGHT / 2, BULLET_WIDTH, BULLET_HEIGHT, null);
+		}
+
 	}
 
 	/**

@@ -1,0 +1,9 @@
+[/] collision
+	(make more accurate?)
+[x] mouse accel. to replace absolute positioning
+[ ] stop player from moving above speakers
+	[ ] alternatively, change speakers' aim to adjust for player.
+[x] hide cursor
+[ ] integrate mp3 stuff
+[ ] more bullet types
+[ ] art things
