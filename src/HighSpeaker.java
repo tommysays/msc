@@ -9,6 +9,7 @@ public class HighSpeaker extends Speaker{
 	public HighSpeaker(int x, int y){
 		setLoc(x, y);
 		counter = 0;
+		angleRate = (3.14 / 80);
 	}
 
 	public void spawn(){

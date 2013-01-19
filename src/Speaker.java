@@ -11,6 +11,7 @@ public abstract class Speaker{
 	protected Color REG_COLOR = Color.WHITE;
 	protected double LIMIT = (3.14 / 2);
 	protected boolean increment = false;
+	protected double angleRate = (3.14 / 40);
 
 	/**
 	 * Sets the location of the speaker.
@@ -38,9 +39,9 @@ public abstract class Speaker{
 	 */
 	public void animate(){
 		if (increment){
-			counter += (3.14 / 40);
+			counter += angleRate;
 		} else{
-			counter -= (3.14 / 40);
+			counter -= angleRate;
 		}
 		if (Math.abs(counter) >= LIMIT){
 			increment = !increment;

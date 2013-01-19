@@ -5,5 +5,5 @@
 	[ ] alternatively, change speakers' aim to adjust for player.
 [x] hide cursor
 [ ] integrate mp3 stuff
-[ ] more bullet types
-[ ] art things
+[/] more bullet types
+[/] art things
