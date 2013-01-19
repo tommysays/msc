@@ -1,0 +1,116 @@
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class DrawPanel extends JPanel implements MouseMotionListener{
+	private final Color BG_COLOR = Color.BLACK;
+	private final Color BOX_COLOR = new Color(200, 220, 255);
+	private final int BOX_WIDTH = 10, BOX_HEIGHT = 10;
+	private int xLoc = 50, yLoc = 50;
+	private static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+	private static ArrayList<Speaker> speakers = new ArrayList<Speaker>();
+	private Timer tmr;
+	private TimerTask task;
+	private int interval = 15;
+	private int spawnInterval = 2;
+	private int counter = 0;
+
+	/**
+	 * Resets the player's position to the center of the screen and clears
+	 * all bullets.
+	 */
+	public void reset(){
+		xLoc = (this.getWidth() + BOX_WIDTH) / 2;
+		yLoc = (this.getHeight() + BOX_HEIGHT) / 2;
+		bullets = new ArrayList<Bullet>();
+		speakers = new ArrayList<Speaker>();
+	}
+
+	/**
+	 * Starts / unpauses the game. (Starts the timer that runs the game.)
+	 */
+	public void start(){
+		tmr = new Timer();
+		task = new TimerTask(){
+			public void run(){tick();}
+		};
+		tmr.schedule(task, 0, interval);
+	}
+
+	/**
+	 * Stops / pauses the game.
+	 */
+	public void stop(){
+		task.cancel();
+	}
+
+	private void tick(){
+		for (int i = 0; i < bullets.size(); ++i){
+			Bullet bl = bullets.get(i);
+			bl.animate();
+			if (bl.getX() < 0 || bl.getX() > this.getWidth() ||
+					bl.getY() < 0 || bl.getY() > this.getHeight()){
+				bullets.remove(i);
+				i--;
+			}
+		}
+		for (Speaker sp : speakers){
+			sp.animate();
+		}
+
+		counter++;
+		if (counter > spawnInterval){
+			for (Speaker sp : speakers){
+				sp.spawn();
+			}
+			counter = 0;
+		}
+		repaint();
+	}
+
+	/**
+	 * Adds a bullet to the arraylist of bullets.
+	 *
+	 * @param bl The bullet to add.
+	 */
+	public static void addBullet(Bullet bl){
+		bullets.add(bl);
+	}
+
+	/**
+	 * Adds speakers to the game.
+	 * Currently only adds 1 base speaker.
+	 */
+	public void initSpeakers(){
+		speakers.add(new BaseSpeaker(this.getWidth() / 2, 50));
+	}
+
+	public void paint(Graphics g){
+		g.setColor(BG_COLOR);
+		g.fillRect(0,0, this.getWidth(), this.getHeight());
+
+		for (Speaker sp : speakers){
+			sp.paint(g);
+		}
+		for (Bullet bl : bullets){
+			bl.paint(g);
+		}
+		g.setColor(BOX_COLOR);
+		g.fillRect(xLoc, yLoc, BOX_WIDTH, BOX_HEIGHT);
+	}
+	public void mouseMoved(MouseEvent me){
+		xLoc = me.getPoint().x - BOX_WIDTH / 2;
+		yLoc = me.getPoint().y - BOX_HEIGHT / 2;
+//		repaint();
+	}
+	public void mouseDragged(MouseEvent me){
+		xLoc = me.getPoint().x - BOX_WIDTH / 2;
+		yLoc = me.getPoint().y - BOX_HEIGHT / 2;
+//		repaint();
+	}
+}
