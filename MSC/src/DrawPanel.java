@@ -16,10 +16,15 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	private static ArrayList<Speaker> speakers = new ArrayList<Speaker>();
 	private Timer tmr;
+        private Timer mscTmr;
 	private TimerTask task;
+        private TimerTask musicTask;
 	private int interval = 20;
 	private int spawnInterval = 2;
 	private int counter = 0;
+        public static boolean spawnLow = false;
+        public static boolean spawnMed = false;
+        public static boolean spawnHigh = false;
 
 	/**
 	 * Resets the player's position to the center of the screen and clears
@@ -39,10 +44,18 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	 */
 	public void start(){
 		tmr = new Timer();
+                mscTmr = new Timer();
 		task = new TimerTask(){
 			public void run(){tick();}
 		};
+                musicTask = new TimerTask(){
+                    public void run(){
+                        AudioToFreq.running = true;
+                        AudioToFreq.PlaySongAndTransform("/party.mp3");
+                    }
+                };
 		tmr.schedule(task, 0, interval);
+                mscTmr.schedule(musicTask, 0);
 	}
 
 	/**
@@ -50,6 +63,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	 */
 	public void stop(){
 		task.cancel();
+                musicTask.cancel();
+                AudioToFreq.running = false;
 	}
 
 	private void tick(){
@@ -78,9 +93,9 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 
 		counter++;
 		if (counter > spawnInterval){
-			for (Speaker sp : speakers){
-				sp.spawn();
-			}
+			if (spawnLow){
+                            speakers.get(0).spawn();
+                        }
 			counter = 0;
 		}
 		if (xLoc != xDest){

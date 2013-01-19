@@ -1,5 +1,4 @@
 
-package audiotofreq;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -17,12 +16,13 @@ public class AudioToFreq {
     final static double INITIAL_THRESHHOLD = 400000.0;
     final static int MIN_BIN = 50;
     final static int MAX_BIN = 70;
+    public static boolean running = false;
     /**
      * @param args the command line arguments
      */
     public static void PlaySongAndTransform(String filename) {
         // TODO code application logic here
-        
+        running = true;
         try {
             File file = new File(filename);
             try (AudioInputStream in = AudioSystem.getAudioInputStream(file)) {
@@ -40,7 +40,7 @@ public class AudioToFreq {
                 rawplay(decodedFormat, din);
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            
+            System.err.println("Something happened here.");
         }
     }
     //Given an audio format and an audio stream, plays audio and calculates fourier transforms
@@ -65,7 +65,8 @@ public class AudioToFreq {
         if (line != null) {
             line.start();
             int nBytesRead = 0, nBytesWritten = 0;
-            while (nBytesRead != -1) {
+            while (nBytesRead != -1 && running) {
+                System.out.println("we reached the while loop.");
                 nBytesRead = din.read(data, 0, data.length);        //Reads in 4096 bytes of data or 2048 samples
                 curVolume = 0;
                 ByteBuffer bb = ByteBuffer.allocate(2);             //The data is actually 16 bits, so I need to transform it from 8
@@ -111,13 +112,15 @@ public class AudioToFreq {
                 testMetric = (max - min)/2 + min; // This is the number to test against to see if we are in a beat
                 if (useRealValues == true) {
                     if (sum > testMetric) {
-                        //OVER THRESH HOLD SEND FUNCTION CALL
+                        DrawPanel.spawnLow = true;
                     } else {
+                        DrawPanel.spawnLow = false;
                     }
                 }else {
                     if (sum > INITIAL_THRESHHOLD) {
-                        //OVER THRESH HOLD SEND FUNCTION CALL
+                        DrawPanel.spawnLow = true;
                     } else {
+                        DrawPanel.spawnLow = false;
                     }
                 }
                 if (nBytesRead != -1) {
