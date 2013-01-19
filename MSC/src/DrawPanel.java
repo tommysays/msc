@@ -90,14 +90,18 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 		for (Speaker sp : speakers){
 			sp.animate();
 		}
-
+                
+                if (spawnLow) {
+                    speakers.get(0).spawn();
+                    spawnLow = false;
+                }
 		counter++;
-		if (counter > spawnInterval){
-			if (spawnLow){
-                            speakers.get(0).spawn();
-                        }
-			counter = 0;
-		}
+//		if (counter > spawnInterval){
+//			if (spawnLow){
+//                            speakers.get(0).spawn();
+//                        }
+//			counter = 0;
+//		}
 		if (xLoc != xDest){
 			xLoc -= (xLoc - xDest) / 3;
 		}

@@ -17,6 +17,7 @@ public class AudioToFreq {
     final static int MIN_BIN = 50;
     final static int MAX_BIN = 70;
     public static boolean running = false;
+    private static boolean hasFired = false;
     /**
      * @param args the command line arguments
      */
@@ -66,7 +67,6 @@ public class AudioToFreq {
             line.start();
             int nBytesRead = 0, nBytesWritten = 0;
             while (nBytesRead != -1 && running) {
-                System.out.println("we reached the while loop.");
                 nBytesRead = din.read(data, 0, data.length);        //Reads in 4096 bytes of data or 2048 samples
                 curVolume = 0;
                 ByteBuffer bb = ByteBuffer.allocate(2);             //The data is actually 16 bits, so I need to transform it from 8
@@ -111,16 +111,19 @@ public class AudioToFreq {
                 }
                 testMetric = (max - min)/2 + min; // This is the number to test against to see if we are in a beat
                 if (useRealValues == true) {
-                    if (sum > testMetric) {
+                    if (sum > testMetric && hasFired == false) {
                         DrawPanel.spawnLow = true;
-                    } else {
+                        hasFired = true;
+                    } else if (sum <= testMetric) {
                         DrawPanel.spawnLow = false;
+                        hasFired = false;
                     }
                 }else {
-                    if (sum > INITIAL_THRESHHOLD) {
+                    if (sum > INITIAL_THRESHHOLD && hasFired == false) {
                         DrawPanel.spawnLow = true;
-                    } else {
+                    } else if (sum <= INITIAL_THRESHHOLD) {
                         DrawPanel.spawnLow = false;
+                        hasFired = false;
                     }
                 }
                 if (nBytesRead != -1) {
