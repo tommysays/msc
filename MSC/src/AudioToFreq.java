@@ -13,7 +13,7 @@ import org.apache.commons.math3.transform.*;
  * @author Kevin
  */
 public class AudioToFreq {
-    final static double INITIAL_THRESHHOLD = 400000.0;
+    final static double INITIAL_THRESHHOLD = 450000.0;
     final static int MIN_BIN = 50;
     final static int MAX_BIN = 70;
     public static boolean running = false;
@@ -44,23 +44,74 @@ public class AudioToFreq {
             System.err.println("Something happened here.");
         }
     }
+    
+    /**Provides a method to detect a beat given bin limits and a fourier 
+    *  transformed waveform
+    * @param minBin the minimum bin from which to detect a beat
+    * @param maxBin same, but maximum
+    * @param fourierTransformed a fourier transformed waveform
+    * @param difficulty A scale of difficulty. 0.5 being the hardest, 1 being the easiest
+    * @param spawnIndex Which speaker to send the messages to
+    */
+    private static void minMaxBuffer(int minBin, int maxBin, 
+                                     double initialThreshhold, 
+                                     Complex[] fourierTransformed, 
+                                     double difficulty,
+                                     int spawnIndex) {
+        double[] minmaxBuffer = new double[15];
+        double min;
+        double max;
+        boolean useRealValues = false;
+        double testMetric;
+        int nextWriteOver = 0;
+        boolean hasFired = false;
+        
+        Arrays.fill(minmaxBuffer, 0.0);
+        double sum = 0;
+        for (int i = minBin; i < maxBin; ++i) {
+            sum += Math.sqrt(fourierTransformed[i].getReal()*
+                    fourierTransformed[i].getReal() + 
+                    (fourierTransformed[i].getImaginary()*
+                    fourierTransformed[i].getImaginary()));
+        } // This loop is for getting the average strength of a frequency range over the frame.
+        sum /= (maxBin - minBin);
+        
+        minmaxBuffer[nextWriteOver] = sum;  //This next block of code is for getting the min/max of the last 15 frames
+        ++nextWriteOver;
+        if (nextWriteOver == minmaxBuffer.length) {nextWriteOver = 0; useRealValues = true;}
+        max = 0; min = 800000;
+        for (double i : minmaxBuffer) {
+             if (i > max) {max = i;}
+             if (i < min) {min = i;}
+        }  
+        testMetric = (max - min)*.25 + min; // This is the number to test against to see if we are in a beat
+        if (useRealValues == true) {
+            if (sum > testMetric && hasFired == false) {
+               DrawPanel.spawn[spawnIndex] = true;
+               hasFired = true;
+            } else if (sum <= testMetric) {
+               DrawPanel.spawn[spawnIndex] = false;
+               hasFired = false;
+            }
+        }else {
+            if (sum > INITIAL_THRESHHOLD && hasFired == false) {
+                DrawPanel.spawn[spawnIndex] = true;
+            } else if (sum <= INITIAL_THRESHHOLD) {
+                DrawPanel.spawn[spawnIndex] = false;
+                hasFired = false;
+            }
+        }
+    }
+    
     //Given an audio format and an audio stream, plays audio and calculates fourier transforms
-    public static void rawplay(AudioFormat targetFormat, AudioInputStream din) throws IOException, LineUnavailableException
+    private static void rawplay(AudioFormat targetFormat, AudioInputStream din) throws IOException, LineUnavailableException
     {
         byte[] data = new byte[4096];           //Holds the current frame's data. 
-        double[] minmaxBuffer = new double[15]; //The values of the last 15 frames. used to find the maximum and minimum of last 15 frames
-        double min;     //Lowest number in the last 15 frames
-        double max;     //Highest number in the last 15 frames
-        boolean useRealValues = false;  //To tell if the minmax buffer is full and you can start using it
-        double testMetric;          //The average of the max and minimum
-        int nextWriteOver = 0;          //Tells where you write next in the maximin array
-        int curVolume;              //The averaged volume of the current frame
         SourceDataLine line = getLine(targetFormat);
         FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD); //The class that performs fourier transforms
         int[] volBuffer = new int[30];  //A buffer to hold the volume of the last 30 frames
         int nextVol = 0;                //To keep the position you are in. in the volume buffer
         
-        Arrays.fill(minmaxBuffer, 0.0);
         Arrays.fill(volBuffer, 0);
         
         if (line != null) {
@@ -95,37 +146,10 @@ public class AudioToFreq {
                 
                 Complex[] result = fft.transform(doubleData, TransformType.FORWARD); //Here's the star of the show
                 
-                double sum = 0;
-                for (int i = MIN_BIN; i < MAX_BIN; ++i) {
-                    sum += Math.sqrt(result[i].getReal()*result[i].getReal() + (result[i].getImaginary()*result[i].getImaginary()));
-                } // This loop is for getting the average strength of a frequency range over the frame.
-                sum /= (MAX_BIN - MIN_BIN);
-                
-                minmaxBuffer[nextWriteOver] = sum;  //This next block of code is for getting the min/max of the last 15 frames
-                ++nextWriteOver;
-                if (nextWriteOver == minmaxBuffer.length) {nextWriteOver = 0; useRealValues = true;}
-                max = 0; min = 800000;
-                for (double i : minmaxBuffer) {
-                    if (i > max) {max = i;}
-                    if (i < min) {min = i;}
-                }
-                testMetric = (max - min)/2 + min; // This is the number to test against to see if we are in a beat
-                if (useRealValues == true) {
-                    if (sum > testMetric && hasFired == false) {
-                        DrawPanel.spawnLow = true;
-                        hasFired = true;
-                    } else if (sum <= testMetric) {
-                        DrawPanel.spawnLow = false;
-                        hasFired = false;
-                    }
-                }else {
-                    if (sum > INITIAL_THRESHHOLD && hasFired == false) {
-                        DrawPanel.spawnLow = true;
-                    } else if (sum <= INITIAL_THRESHHOLD) {
-                        DrawPanel.spawnLow = false;
-                        hasFired = false;
-                    }
-                }
+                minMaxBuffer(MIN_BIN,MAX_BIN, INITIAL_THRESHHOLD, result, 0.85, 0);
+                minMaxBuffer(1200,1220, 400000, result, 0.5, 1);
+                minMaxBuffer(2000,2020, INITIAL_THRESHHOLD, result, 0.5, 2);
+
                 if (nBytesRead != -1) {
                     nBytesWritten = line.write(data, 0, nBytesRead);
                 }
@@ -136,7 +160,7 @@ public class AudioToFreq {
         din.close();
         }
     }
-    public static SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException
+    private static SourceDataLine getLine(AudioFormat audioFormat) throws LineUnavailableException
     {
         SourceDataLine res;
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);

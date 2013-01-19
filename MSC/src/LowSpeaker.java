@@ -15,9 +15,9 @@ public class LowSpeaker extends Speaker{
 	 * Creates one regular bullet.
 	 */
 	public void spawn(){
-                for (int i = 0; i < 10; ++i){
+                for (int i = 0; i < 5; ++i){
                     Image img = Main.lowNotes.get((int)(Math.random() * Main.lowNotes.size()));
-                    DrawPanel.addBullet(new LowBullet(xLoc, yLoc, (3.14 / 4) + ((i + .5) / 10.0) * (3.14 / 2), img));
+                    DrawPanel.addBullet(new LowBullet(xLoc, yLoc, (3.14 / 4) + ((i + .5) / 10.0) * (3.14 / 1), img));
                 }
 	}
         public void animate(){}

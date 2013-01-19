@@ -22,10 +22,10 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private int interval = 20;
 	private int spawnInterval = 2;
 	private int counter = 0;
-        public static boolean spawnLow = false;
-        public static boolean spawnMed = false;
-        public static boolean spawnHigh = false;
+        public static boolean[] spawn = {false, false, false};
 
+
+                                                                                                                                                                                                                                                                                                    
 	/**
 	 * Resets the player's position to the center of the screen and clears
 	 * all bullets.
@@ -51,7 +51,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 musicTask = new TimerTask(){
                     public void run(){
                         AudioToFreq.running = true;
-                        AudioToFreq.PlaySongAndTransform("/party.mp3");
+                        AudioToFreq.PlaySongAndTransform("/rawk.mp3");
                     }
                 };
 		tmr.schedule(task, 0, interval);
@@ -91,9 +91,9 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 			sp.animate();
 		}
                 
-                if (spawnLow) {
+                if (spawn[0]) {
                     speakers.get(0).spawn();
-                    spawnLow = false;
+                    spawn[0] = false;
                 }
 		counter++;
 //		if (counter > spawnInterval){
