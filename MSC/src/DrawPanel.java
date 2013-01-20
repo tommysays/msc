@@ -1,3 +1,4 @@
+import com.soundcloud.api.*;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -24,8 +25,15 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private int counter = 0;
         public static boolean[] spawn = {false, false, false};
 
-
-                                                                                                                                                                                                                                                                                                    
+        private ApiWrapper wrapper;
+        private Connection connection;
+        private Content content;
+        private String client_id;
+        private String client_secret;
+        private String username = "jo.paul.91@gmail.com";
+        private String password = "nim2006";
+                 
+        
 	/**
 	 * Resets the player's position to the center of the screen and clears
 	 * all bullets.
@@ -43,6 +51,16 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	 * Starts / unpauses the game. (Starts the timer that runs the game.)
 	 */
 	public void start(){
+                client_id = "59300a92df9799f95258a9ba20992375";
+                client_secret = "1efc4b68c039a18d5ba9305d4ea6a0ba";
+                
+                wrapper = new ApiWrapper(client_id, client_secret, null, null);
+                connection = new Connection(wrapper);
+                try {
+                    content = new Content();
+                    connection.Connect(username, password);
+                    content.getContent(wrapper);
+                } catch (Exception e) {}
 		tmr = new Timer();
                 mscTmr = new Timer();
 		task = new TimerTask(){
