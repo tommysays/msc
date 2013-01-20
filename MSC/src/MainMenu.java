@@ -1,3 +1,4 @@
+import com.soundcloud.api.ApiWrapper;
 import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -15,6 +16,15 @@ import javax.swing.JFrame;
  */
 public class MainMenu extends JPanel implements ActionListener{
     public static final JFileChooser fc = new JFileChooser();
+    
+    private ApiWrapper wrapper;
+    private Connection connection;
+    private Content content;
+    private String client_id;
+    private String client_secret;
+    private String username = "";
+    private String password = "";
+    
     public static void main(String[] args){
         JFrame frm = new JFrame("lsdfj");
         frm.setSize(500,750);
@@ -25,6 +35,14 @@ public class MainMenu extends JPanel implements ActionListener{
         frm.setVisible(true);
     }
     public void start(){
+        client_id = "59300a92df9799f95258a9ba20992375";
+        client_secret = "1efc4b68c039a18d5ba9305d4ea6a0ba";
+
+        wrapper = new ApiWrapper(client_id, client_secret, null, null);
+        connection = new Connection(wrapper);
+        content = new Content(wrapper);
+        connection.Connect(username, password);
+        content.getContent();
         fc.setCurrentDirectory(new File("./"));
         setLayout(null);
         JButton localBtn = new JButton("Play from local file");
@@ -37,7 +55,7 @@ public class MainMenu extends JPanel implements ActionListener{
         cloudBtn.setBounds(100, 500, 300, 70);
         add(localBtn);
         add(cloudBtn);
-        System.out.println("buttons added!");
+        //System.out.println("buttons added!");
     }
     public void paint(Graphics g){
         try{

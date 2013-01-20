@@ -197,18 +197,17 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 
 	}
 
+        @Override
 	public void paint(Graphics g){
 //            try{
 //                BufferedImage img;
 //                img = ImageIO.read(new File("images/cubism.png"));
 //                g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
 //            } catch(Exception e){
-                g.setColor(new Color(0,0,0,20));
+                g.setColor(BG_COLOR);
                 g.fillRect(0,0, this.getWidth(), this.getHeight());
 //            }
 		g.setColor(BG_COLOR);
-                System.out.println(BG_COLOR.toString());
-                System.out.println(targetColor.toString());
 		g.fillRect(0,0, this.getWidth(), this.getHeight());
 
             for (Speaker sp : speakers){
