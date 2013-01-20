@@ -168,7 +168,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	}
 
 	public void paint(Graphics g){
-		g.setColor(BG_COLOR);
+		g.setColor(new Color(0,0,0,20));
 		g.fillRect(0,0, this.getWidth(), this.getHeight());
 
 		for (Speaker sp : speakers){
