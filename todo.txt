@@ -1,9 +1,14 @@
 [/] collision
 	(make more accurate?)
 [x] mouse accel. to replace absolute positioning
-[ ] stop player from moving above speakers
-	[ ] alternatively, change speakers' aim to adjust for player.
+[x] ~~stop player from moving above speakers~~
+	[x] alternatively, change speakers' aim to adjust for player.
 [x] hide cursor
-[ ] integrate mp3 stuff
-[/] more bullet types
+[x] integrate mp3 stuff
+[ ] integrate soundcloud
+[x] more bullet types
 [/] art things
+[ ] more accurate beat detection
+
+BUGS:
+[ ] Choosing an invalid file throws an exception, doesn't crash game.

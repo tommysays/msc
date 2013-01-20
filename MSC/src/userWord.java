@@ -43,10 +43,10 @@ password = text2.getText();
 }
 }
 class LoginDemo {
-public static void main(String arg[]) {
-userWord frame = new userWord();
-frame.setSize(500, 750);
-frame.setVisible(true);
-frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void main(String arg[]) {
+    userWord frame = new userWord();
+    frame.setSize(500, 750);
+    frame.setVisible(true);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 }
 }
