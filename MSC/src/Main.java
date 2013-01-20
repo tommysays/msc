@@ -12,6 +12,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import org.json.JSONException;
 
 
 public class Main extends JFrame{
@@ -24,7 +25,7 @@ public class Main extends JFrame{
 	public static ArrayList<Image> highNotes = new ArrayList<Image>();
 	public static ArrayList<Image> midNotes = new ArrayList<Image>();
 	public static ArrayList<Image> lowNotes = new ArrayList<Image>();
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException, JSONException{
 		loadLowNotes();
 		loadMidNotes();
 		loadHighNotes();
@@ -74,7 +75,7 @@ public class Main extends JFrame{
 		}
 	}
 
-	public void start(){
+	public void start() throws IOException, JSONException{
 		setSize(500,750);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -97,7 +98,7 @@ public class Main extends JFrame{
 		blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
 			cursorImg, new Point(0, 0), "blank cursor");
 	}
-	public static void gameOver(){
+	public static void gameOver() throws IOException, JSONException{
 		pnl.reset();
 		pnl.stop();
 		pnl.setCursor(Cursor.getDefaultCursor());

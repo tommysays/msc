@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.json.JSONException;
 
 public class DrawPanel extends JPanel implements MouseMotionListener{
@@ -62,17 +64,24 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 content = new Content(wrapper);
                 connection.Connect(username, password);
                 content.getContent();
-                URL url = new URL(content.getDownloadLink(0));
-                mp3downloader.download(url, content.getSongTitle(0) + ".mp3");
+                //URL url = new URL(content.getDownloadLink(0));
+                //mp3downloader.download(url, content.getSongTitle(0) + ".mp3");
 		tmr = new Timer();
                 mscTmr = new Timer();
 		task = new TimerTask(){
-			public void run(){tick();}
+			public void run(){try {
+                            tick();
+                        } catch (IOException ex) {
+                            Logger.getLogger(DrawPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (JSONException ex) {
+                            Logger.getLogger(DrawPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+}
 		};
                 musicTask = new TimerTask(){
                     public void run(){
                         AudioToFreq.running = true;
-                        AudioToFreq.PlaySongAndTransform("/party.mp3");
+                        AudioToFreq.PlaySongAndTransform("party.mp3");
                     }
                 };
 		tmr.schedule(task, 0, interval);
@@ -88,7 +97,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 AudioToFreq.running = false;
 	}
 
-	private void tick(){
+	private void tick() throws IOException, JSONException{
 		for (int i = 0; i < bullets.size(); ++i){
 			Bullet bl = bullets.get(i);
 			int bx = bl.getX();
