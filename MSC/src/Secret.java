@@ -1,9 +1,10 @@
 import com.soundcloud.api.*;
 import java.io.IOException;
+import org.json.JSONException;
 
 public class Secret 
 {  
-    public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws IOException, JSONException
     {
         ApiWrapper wrapper;
         Connection connection;
@@ -20,9 +21,10 @@ public class Secret
         
         wrapper = new ApiWrapper(client_id, client_secret, null, null);
         connection = new Connection (wrapper);
-        content = new Content();
+        content = new Content(wrapper);
         
         connection.Connect(username, password);
-        content.getContent(wrapper);
+        content.getContent();
+        System.out.println(content.getDownloadLink(0));
     }
 }
