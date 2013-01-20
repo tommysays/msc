@@ -194,16 +194,17 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	public void paint(Graphics g){
                 g.setColor(BG_COLOR);
                 g.fillRect(0,0, this.getWidth(), this.getHeight());
-//            }
-		g.setColor(BG_COLOR);
-		g.fillRect(0,0, this.getWidth(), this.getHeight());
 
+try{
             for (Speaker sp : speakers){
             	sp.paint(g);
             }
             for (Bullet bl : bullets){
             	bl.paint(g);
             }
+} catch (Exception e) {
+    
+}
             g.setColor(BOX_COLOR);
             g.fillRect(xLoc - BOX_WIDTH / 2, yLoc - BOX_HEIGHT / 2, BOX_WIDTH, BOX_HEIGHT);
             
