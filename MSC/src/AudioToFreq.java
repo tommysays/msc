@@ -149,11 +149,18 @@ public class AudioToFreq {
                 
 //                minMaxBuffer(0,100, INITIAL_THRESHHOLD, result, 1.0, 0);
                 minMaxBuffer(50,70, INITIAL_THRESHHOLD, result, 1.0, 0);
-                minMaxBuffer(300,350, 400000, result, 0.5, 1);
+                minMaxBuffer(100,120, 400000, result, 0.5, 1);
                 minMaxBuffer(2000,2047, INITIAL_THRESHHOLD, result, .5, 2);
 
                 if (nBytesRead != -1) {
                     nBytesWritten = line.write(data, 0, nBytesRead);
+                }
+            }
+            if (running){
+                try{
+                    Main.gameOver();
+                } catch(Exception e){
+                    System.err.println("Error when ending a won game.");
                 }
             }
         line.drain(); //close the audio stream. Song's over

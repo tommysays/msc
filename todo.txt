@@ -10,7 +10,7 @@
 [/] art things
 [ ] more accurate frequency inputs
 [x] show usr that prog. is loading after soundcloud select
-[ ] win condition
+[x] win condition
 [ ] store high scores for each song?
 
 BUGS:
