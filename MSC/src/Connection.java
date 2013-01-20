@@ -22,7 +22,8 @@ public class Connection
         } 
         catch (IOException ex) 
         {
-            System.out.println("Incorrect Password"); 
+            //make this a pop up window later
+            System.out.println("Incorrect username or password");
         }
         
         return token;
