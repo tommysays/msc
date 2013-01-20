@@ -22,6 +22,7 @@ public class Main extends JFrame{
 	private final int BOX_WIDTH = 10, BOX_HEIGHT = 10;
 	private static DrawPanel drawPnl;
         private static MainMenu menuPnl;
+        private static CloudMenu cloudPnl;
 	private static Main frm;
 	private static Cursor blankCursor;
         private static CardLayout cl;
@@ -80,20 +81,21 @@ public class Main extends JFrame{
 	}
 
 	public void start() throws IOException, JSONException{
-            CardLayout layout = new CardLayout();
             setSize(500,750);
             setTitle("2 Fast 2 Music");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setResizable(false);
             createBlankCursor();
+            
             drawPnl = new DrawPanel();
             drawPnl.addMouseMotionListener(drawPnl);
             menuPnl = new MainMenu();
-            
+            cloudPnl = new CloudMenu();
             
             setLayout(cl = new CardLayout());
             add(menuPnl, "menu");
             add(drawPnl, "draw");
+            add(cloudPnl, "cloud");
             menuPnl.start();
             setVisible(true);
 	}
@@ -109,6 +111,8 @@ public class Main extends JFrame{
                 }
             } else if (name.equals("menu")){
                 menuPnl.start();
+            } else if (name.equals("cloud")){
+                cloudPnl.start();
             }
             cl.show(frm.getContentPane(), name);
             frm.repaint();
@@ -138,7 +142,11 @@ public class Main extends JFrame{
                 drawPnl.initSpeakers();
                 drawPnl.start();
             } else{
-                Main.change("menu");
+                if (useCloudMenu){
+                    Main.change("cloud");
+                } else{
+                    Main.change("menu");
+                }
             }
 	}
 }

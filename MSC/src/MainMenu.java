@@ -10,8 +10,13 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  *
@@ -21,8 +26,8 @@ public class MainMenu extends JPanel implements ActionListener{
     public static final JFileChooser fc = new JFileChooser();
     
     private ApiWrapper wrapper;
-    private Connection connection;
-    private Content content;
+    public static Connection connection;
+    public static Content content;
     private String client_id;
     private String client_secret;
     private String username = "";
@@ -80,17 +85,34 @@ public class MainMenu extends JPanel implements ActionListener{
             //TODO choose from cloud.
             wrapper = new ApiWrapper(client_id, client_secret, null, null);
             connection = new Connection(wrapper);
+            
+//            openLoginWindow();
+            JLabel nameLbl = new JLabel("Username:");
+            JTextField nameFld = new JTextField();
+            JLabel passLbl = new JLabel("Password:");
+            JPasswordField passFld = new JPasswordField();
+            JComponent[] inputs = {nameLbl, nameFld, passLbl, passFld};
+            JOptionPane.showMessageDialog(null, inputs, "Login", JOptionPane.PLAIN_MESSAGE);
+           
             try {
                 content = new Content(wrapper);
             } catch (IOException ex) {
                 Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
-            openLoginWindow();
+            try{
+                connection.Connect(nameFld.getText(), passFld.getText());
+            } catch(Exception e){
+                JOptionPane.showMessageDialog(null, "Access Denied");
+                return;
+            }
             try {
                 content.getContent();
             } catch (IOException ex) {
                 Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
             }
+            Main.useCloudMenu = true;
+            System.out.println("things");
+            Main.change("cloud");
         }
     }
     public void openLoginWindow() {
