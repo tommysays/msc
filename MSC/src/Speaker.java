@@ -12,6 +12,7 @@ public abstract class Speaker{
 	protected double LIMIT = (3.14 / 2);
 	protected boolean increment = false;
 	protected double angleRate = (3.14 / 40);
+        protected double aim = 0;
 
 	/**
 	 * Sets the location of the speaker.
@@ -47,4 +48,29 @@ public abstract class Speaker{
 			increment = !increment;
 		}
 	}
+        public void adjustAim(int x, int y){
+            double xAdjusted = xLoc - x;
+            double yAdjusted = y - yLoc;
+            if (xAdjusted == 0 && yAdjusted >= 0){
+                aim += (3.14 * 3 / 4);
+                return;
+            } else if (xAdjusted == 0 && yAdjusted < 0){
+                aim += (3.14 * 1 / 4);
+            }
+            aim = Math.atan(-yAdjusted / xAdjusted);
+            
+            if (xAdjusted >= 0 && yAdjusted >= 0){
+                //first quadrant
+            } else if (xAdjusted <=0 && yAdjusted >= 0){
+                //second
+                aim += 3.14;
+            } else if (xAdjusted <= 0 && yAdjusted <= 0){
+                //third
+                aim += 3.14;
+            } else{
+                //fourth
+            }
+            
+            aim += (3.14 * 2 / 4);
+        }
 }

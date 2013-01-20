@@ -51,7 +51,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 musicTask = new TimerTask(){
                     public void run(){
                         AudioToFreq.running = true;
-                        AudioToFreq.PlaySongAndTransform("/rawk.mp3");
+                        AudioToFreq.PlaySongAndTransform("rawk.mp3");
                     }
                 };
 		tmr.schedule(task, 0, interval);
@@ -88,12 +88,20 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 			}
 		}
 		for (Speaker sp : speakers){
-			sp.animate();
+                    sp.adjustAim(xLoc, yLoc);
+                    sp.animate();
 		}
                 
                 if (spawn[0]) {
                     speakers.get(0).spawn();
                     spawn[0] = false;
+                } else if (spawn[1]){
+                    speakers.get(1).spawn();
+                    spawn[1] = false;
+                } else if (true){
+                    speakers.get(2).spawn();
+                    speakers.get(3).spawn();
+                    spawn[2] = false;
                 }
 		counter++;
 //		if (counter > spawnInterval){
@@ -127,10 +135,12 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	public void initSpeakers(){
 		//Top-Middle LowSpeaker.
 		speakers.add(new LowSpeaker(this.getWidth() / 2, 50));
-		//Three HighSpeakers
+                //Mid speaker.
+                speakers.add(new MidSpeaker(this.getWidth() * 3 / 4, 150));
+		//Two HighSpeakers
 		speakers.add(new HighSpeaker(this.getWidth() / 4, 150));
 		speakers.add(new HighSpeaker(this.getWidth() / 2, 150));
-		speakers.add(new HighSpeaker(this.getWidth() * 3 / 4, 150));
+		
 
 	}
 

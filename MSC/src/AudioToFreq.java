@@ -42,6 +42,7 @@ public class AudioToFreq {
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             System.err.println("Something happened here.");
+            e.printStackTrace();
         }
     }
     
