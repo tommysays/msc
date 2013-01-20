@@ -31,7 +31,7 @@ public class Content
 
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) 
         {
-            System.out.println("\n" + response_string);
+            //System.out.println("\n" + response_string);
             getTrackInfo(response_string);
             
 
@@ -62,14 +62,14 @@ public class Content
             
             //System.out.println("\n+++++\n" + starting_index + " hh " + ending_index);
             stream_url[i] = data.substring(starting_index , ending_index);
-            System.out.println("\n" + stream_url[i]);
+            //System.out.println("\n" + stream_url[i]);
             
             starting_index_offset = 10;
             starting_index = data.indexOf(search2, starting_index) + starting_index_offset;
             ending_index = data.indexOf(",", starting_index) - 1;
             
             song_title[i] = data.substring(starting_index , ending_index);
-            System.out.println("\n" + song_title[i]);
+            //System.out.println("\n" + song_title[i]);
             
             starting_index = ending_index;
             i++;
