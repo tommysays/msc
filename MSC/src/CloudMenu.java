@@ -13,13 +13,13 @@ import javax.swing.JFrame;
  *
  * @author Tommy
  */
-public class MainMenu extends JPanel implements ActionListener{
+public class CloudMenu extends JPanel implements ActionListener{
     public static final JFileChooser fc = new JFileChooser();
     public static void main(String[] args){
         JFrame frm = new JFrame("lsdfj");
         frm.setSize(500,750);
         frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        MainMenu pnl = new MainMenu();
+        CloudMenu pnl = new CloudMenu();
         pnl.start();
         frm.add(pnl);
         frm.setVisible(true);
@@ -42,10 +42,8 @@ public class MainMenu extends JPanel implements ActionListener{
     public void paint(Graphics g){
         try{
             BufferedImage img;
-            img = ImageIO.read(new File("images/lava.png"));
+            img = ImageIO.read(new File("images/cubism.png"));
             g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
-            img = ImageIO.read(new File("images/Logo.png"));
-            g.drawImage(img, 10, 50, this.getWidth() - 10, 250, null);
         } catch(Exception e){
             System.err.println("could not load img for main menu");
         }

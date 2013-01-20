@@ -1,5 +1,8 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import javax.imageio.ImageIO;
 
 /**
  * The main bullet-throwing object.
@@ -26,8 +29,14 @@ public abstract class Speaker{
 	}
 
 	public void paint(Graphics g){
-		g.setColor(REG_COLOR);
-		g.fillRect(xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT);
+            try{
+                BufferedImage img;
+                img = ImageIO.read(new File("images/speaker.png"));
+                g.drawImage(img, xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT, null);
+            } catch(Exception e){
+                g.setColor(REG_COLOR);
+                g.fillRect(xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT);
+            }
 	}
 
 	/**

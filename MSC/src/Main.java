@@ -28,6 +28,7 @@ public class Main extends JFrame{
 	public static ArrayList<Image> highNotes = new ArrayList<Image>();
 	public static ArrayList<Image> midNotes = new ArrayList<Image>();
 	public static ArrayList<Image> lowNotes = new ArrayList<Image>();
+        public static boolean useCloudMenu = false;
 	public static void main(String[] args) throws IOException, JSONException{
 		loadLowNotes();
 		loadMidNotes();
