@@ -87,7 +87,6 @@ public class Main extends JFrame{
             createBlankCursor();
             drawPnl = new DrawPanel();
             drawPnl.addMouseMotionListener(drawPnl);
-            drawPnl.setCursor(blankCursor);
             menuPnl = new MainMenu();
             
             
@@ -101,6 +100,7 @@ public class Main extends JFrame{
             if (name.equals("draw")){
                 drawPnl.reset();
                 drawPnl.initSpeakers();
+                drawPnl.setCursor(blankCursor);
                 try{
                     drawPnl.start();
                 } catch(Exception e){
