@@ -31,6 +31,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
         private Timer mscTmr;
 	private TimerTask task;
         private TimerTask musicTask;
+        private int score = 0;
 	private int interval = 20;
         public static boolean[] spawn = {false, false, false};
 
@@ -42,7 +43,9 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
         private String username = "jo.paul.91@gmail.com";
         private String password = "nim2006";
                  
-        
+        public int getScore(){
+            return score;
+        }
 	/**
 	 * Resets the player's position to the center of the screen and clears
 	 * all bullets.
@@ -52,6 +55,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 		yLoc = (this.getHeight() + BOX_HEIGHT) / 2;
 		xDest = xLoc;
 		yDest = yLoc;
+                score = 0;
 		bullets = new ArrayList<>();
 		speakers = new ArrayList<>();
 	}
@@ -169,6 +173,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 } else  {
                     BG_COLOR = new Color(BG_COLOR.getRed(), BG_COLOR.getBlue()+1,BG_COLOR.getGreen(), 20);
                 }
+                score += 5;
 		repaint();
 	}
 
@@ -218,6 +223,11 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
             }
             g.setColor(BOX_COLOR);
             g.fillRect(xLoc - BOX_WIDTH / 2, yLoc - BOX_HEIGHT / 2, BOX_WIDTH, BOX_HEIGHT);
+            
+            g.setColor(Color.BLACK);
+            g.fillRect(this.getWidth() - 100, this.getHeight() - 30, 100, 30);
+            g.setColor(Color.WHITE);
+            g.drawString("Score: " + score, this.getWidth() - 90, this.getHeight() - 5);
 	}
         public static void setInputFile(File aFile){
             musicFile = aFile;
