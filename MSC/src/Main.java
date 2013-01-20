@@ -82,7 +82,7 @@ public class Main extends JFrame{
 
 	public void start() throws IOException, JSONException{
             setSize(500,750);
-            setTitle("2 Fast 2 Music");
+            setTitle("2 Fast 2 Musical");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setResizable(false);
             createBlankCursor();

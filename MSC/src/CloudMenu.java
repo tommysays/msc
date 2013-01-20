@@ -1,4 +1,5 @@
 import com.soundcloud.api.ApiWrapper;
+import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -8,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -33,6 +36,10 @@ public class CloudMenu extends JPanel implements ActionListener{
     private String client_secret;
     private String username = "";
     private String password = "";
+    private boolean loading = false;
+    private int numDots = 0;
+    private Timer tmr;
+    private TimerTask task;
     
     public static void main(String[] args){
         JFrame frm = new JFrame("lsdfj");
@@ -74,10 +81,26 @@ public class CloudMenu extends JPanel implements ActionListener{
             g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
             img = ImageIO.read(new File("images/Logo.png"));
             g.drawImage(img, 10, 50, this.getWidth() - 10, 250, null);
+            if (loading){
+                for (int i = 0; i < numDots; ++i){
+                    g.setColor(new Color(120 + (30 * i), 180, 200));
+                    g.fillOval(i * 70 + 125, 270, 40, 40);
+                    System.out.println("loading");
+                }
+            }
         } catch(Exception e){
             System.err.println("could not load img for main menu");
         }
         this.paintComponents(g);
+    }
+    public void tick(){
+        if (numDots > 3){
+            numDots = 0;
+        } else{
+            numDots++;
+        }
+        System.out.println("tick!");
+        repaint();
     }
     public void actionPerformed(ActionEvent ae){
         String command = ae.getActionCommand();
@@ -128,16 +151,33 @@ public class CloudMenu extends JPanel implements ActionListener{
             box.setEditable(false);
             JComponent[] inputs = {box};
             JOptionPane.showMessageDialog(null, inputs, "Select a song", JOptionPane.PLAIN_MESSAGE);
-            String selected = (String)(box.getSelectedItem());
+            final String selected = (String)(box.getSelectedItem());
             for (int i =0; i < MainMenu.content.getTotalSongs(); ++i){
                 if (MainMenu.content.getSongTitle(i).equals(selected)){
                     try{
-                        JOptionPane.showMessageDialog(null, "Ready to download.");
-                        URL link = new URL(MainMenu.content.getDownloadLink(i));
-                        mp3downloader.download(link, selected + ".mp3");
-                        //Launch game.
-                        DrawPanel.setInputFile(new File(selected + ".mp3"));
-                        Main.change("draw");
+                        JOptionPane.showMessageDialog(null, "Loading song.");
+                        tmr = new Timer();
+                        task = new TimerTask(){
+                            public void run(){tick();}
+                        };
+                        tmr.schedule(task, 0, 500);
+                        loading = true;
+                        final URL link = new URL(MainMenu.content.getDownloadLink(i));
+                        
+                        TimerTask loadTask = new TimerTask(){
+                            public void run(){
+                                setEnabled(false);
+                                mp3downloader.download(link, selected + ".mp3");
+                                DrawPanel.setInputFile(new File(selected + ".mp3"));
+                                tmr.cancel();
+                                loading = false;
+                                JOptionPane.showMessageDialog(null, "Song loaded!.");
+                                Main.change("draw");
+                                setEnabled(true);
+                            }
+                        };
+                        Timer tmr2 = new Timer();
+                        tmr2.schedule(loadTask, 0);
                     } catch(Exception e){
                         System.err.println("Error in downloading song.");
                     }

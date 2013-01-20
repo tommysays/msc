@@ -1,14 +1,18 @@
-[/] collision
+[x] collision
 	(make more accurate?)
 [x] mouse accel. to replace absolute positioning
 [x] ~~stop player from moving above speakers~~
 	[x] alternatively, change speakers' aim to adjust for player.
 [x] hide cursor
 [x] integrate mp3 stuff
-[ ] integrate soundcloud
+[x] integrate soundcloud
 [x] more bullet types
 [/] art things
-[ ] more accurate beat detection
+[ ] more accurate frequency inputs
+[x] show usr that prog. is loading after soundcloud select
+[ ] win condition
+[ ] store high scores for each song?
 
 BUGS:
 [ ] Choosing an invalid file throws an exception, doesn't crash game.
+[ ] Being directly under a speaker causes it to throw bullets in rand. directions.
