@@ -6,13 +6,15 @@ import java.awt.Image;
  * Emulates a bullet that follows a function to determine its path.
  */
 public class Bullet{
-	protected double xLoc, yLoc;
+	protected double xLoc, yLoc, xVel, yVel, xAcc, yAcc;
 	protected double direction;
 	protected Image img;
 	protected final Color BULLET_COLOR = Color.RED;
 	protected int BULLET_WIDTH = 8;
 	protected int BULLET_HEIGHT = 8;
 	protected double SPD = 3;
+        protected double WIND = -0.2;
+        protected double STSPD = 10;
 	/**
 	 * Creates a bullet at the specified location with a certain direction.
 	 *
@@ -29,6 +31,8 @@ public class Bullet{
 	public Bullet(int x, int y, double direction, Image img){
 		xLoc = x;
 		yLoc = y;
+                xVel = STSPD;
+                yVel = STSPD;
 		this.direction = direction;
 		this.img = img;
 	}
@@ -60,7 +64,13 @@ public class Bullet{
 	 * Moves the bullet based on some function.
 	 */
 	public void animate(){
-		xLoc += SPD * Math.cos(direction);
-		yLoc += SPD * Math.sin(direction);
+                xAcc += WIND;
+                yAcc += WIND;
+                xVel += xAcc;
+                yVel += yAcc;
+                if (xVel <= SPD) { xVel = SPD;}
+                if (yVel <= SPD) { yVel = SPD;}
+		xLoc += xVel * Math.cos(direction);
+		yLoc += yVel * Math.sin(direction);
 	}
 }
