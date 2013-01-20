@@ -2,6 +2,8 @@ import com.soundcloud.api.*;
 import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Content 
 {
@@ -9,15 +11,17 @@ public class Content
     private String[] song_title;
     private String[] stream_url;
     private String download_url;
+    private ApiWrapper wrapper;
      
-    public Content() throws IOException
+    public Content(ApiWrapper wrapper) throws IOException
     {
+        this.wrapper = wrapper;
         song_title = new String[MAXTRACKS];
         stream_url = new String[MAXTRACKS];
         download_url = "";
     }
     
-    public HttpResponse getContent(ApiWrapper wrapper) throws IOException
+    public HttpResponse getContent() throws IOException
     {
         HttpResponse response;
         String response_string;
@@ -73,10 +77,15 @@ public class Content
         }
     }
     
-    public String getDownloadLink()
+    /**
+     *
+     * @param response
+     * @return
+     */
+    public String getDownloadLink( int urlIndex) throws IOException, JSONException
     {
-            response = wrapper.get(Request.to(stream_url[i]));
-            response_string = Http.formatJSON(Http.getString(response));
-            System.out.println("\n" + response_string);      
+            HttpResponse response = wrapper.get(Request.to(stream_url[urlIndex]));
+            JSONObject response_string = new JSONObject (Http.formatJSON(Http.getString(response)));
+            return response_string.getString("location"); 
     }
 }
