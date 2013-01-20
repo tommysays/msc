@@ -1,5 +1,7 @@
 import com.soundcloud.api.*;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.http.*;
 
 public class Connection 
@@ -12,9 +14,17 @@ public class Connection
         this.wrapper = wrapper;
     }
     
-    public Token Connect(String username, String password) throws IOException
+    public Token Connect(String username, String password)
     {
-        token = wrapper.login(username, password);
+        try 
+        {
+            token = wrapper.login(username, password);
+        } 
+        catch (IOException ex) 
+        {
+            //make this a pop up window later
+            System.out.println("Incorrect username or password");
+        }
         
         return token;
     }    
