@@ -81,6 +81,7 @@ public class Main extends JFrame{
 	public void start() throws IOException, JSONException{
             CardLayout layout = new CardLayout();
             setSize(500,750);
+            setTitle("2 Fast 2 Music");
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setResizable(false);
             createBlankCursor();
@@ -109,6 +110,7 @@ public class Main extends JFrame{
                 menuPnl.start();
             }
             cl.show(frm.getContentPane(), name);
+            frm.repaint();
         }
 
 	/**
@@ -120,12 +122,22 @@ public class Main extends JFrame{
 			cursorImg, new Point(0, 0), "blank cursor");
 	}
 	public static void gameOver() throws IOException, JSONException{
-		drawPnl.reset();
-		drawPnl.stop();
-		drawPnl.setCursor(Cursor.getDefaultCursor());
-		JOptionPane.showMessageDialog(frm, "Game over!\nWhat a noob.");
-		drawPnl.setCursor(blankCursor);
-		drawPnl.initSpeakers();
-		drawPnl.start();
+            int score = drawPnl.getScore();
+            drawPnl.reset();
+            drawPnl.stop();
+            drawPnl.setCursor(Cursor.getDefaultCursor());
+            JOptionPane.showMessageDialog(drawPnl, "Game over!\nYour score was:\n" +score,
+                                frm.getTitle(), JOptionPane.INFORMATION_MESSAGE);
+//            int result = JOptionPane.showConfirmDialog(frm, "Play again?");
+            int result = JOptionPane.showConfirmDialog(drawPnl, "Play again?",
+                                 frm.getTitle(), JOptionPane.YES_NO_OPTION);
+            
+            if (result == JOptionPane.OK_OPTION){
+                drawPnl.setCursor(blankCursor);
+                drawPnl.initSpeakers();
+                drawPnl.start();
+            } else{
+                Main.change("menu");
+            }
 	}
 }
