@@ -14,18 +14,9 @@ public class Connection
         this.wrapper = wrapper;
     }
     
-    public Token Connect(String username, String password)
+    public Token Connect(String username, String password) throws IOException
     {
-        try 
-        {
-            token = wrapper.login(username, password);
-        } 
-        catch (IOException ex) 
-        {
-            //make this a pop up window later
-            System.out.println("Incorrect username or password");
-        }
-        
+        token = wrapper.login(username, password);
         return token;
     }    
 }

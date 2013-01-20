@@ -6,6 +6,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -38,11 +41,7 @@ public class MainMenu extends JPanel implements ActionListener{
         client_id = "59300a92df9799f95258a9ba20992375";
         client_secret = "1efc4b68c039a18d5ba9305d4ea6a0ba";
 
-        wrapper = new ApiWrapper(client_id, client_secret, null, null);
-        connection = new Connection(wrapper);
-        content = new Content(wrapper);
-        connection.Connect(username, password);
-        content.getContent();
+        
         fc.setCurrentDirectory(new File("./"));
         setLayout(null);
         JButton localBtn = new JButton("Play from local file");
@@ -77,6 +76,25 @@ public class MainMenu extends JPanel implements ActionListener{
             }
         } else if (command.equals("cloud")){
             //TODO choose from cloud.
+            wrapper = new ApiWrapper(client_id, client_secret, null, null);
+            connection = new Connection(wrapper);
+            try {
+                content = new Content(wrapper);
+            } catch (IOException ex) {
+                Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            openLoginWindow();
+            try {
+                content.getContent();
+            } catch (IOException ex) {
+                Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+    }
+    public void openLoginWindow() {
+        userWord frame = new userWord(connection);
+        frame.setSize(500, 400);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
