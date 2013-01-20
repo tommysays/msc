@@ -16,7 +16,7 @@ public abstract class Speaker{
 	protected boolean increment = false;
 	protected double angleRate = (3.14 / 40);
         protected double aim = 0;
-
+        
 	/**
 	 * Sets the location of the speaker.
 	 *
@@ -30,9 +30,8 @@ public abstract class Speaker{
 
 	public void paint(Graphics g){
             try{
-                BufferedImage img;
-                img = ImageIO.read(getClass().getResource("images/speaker.png"));
-                g.drawImage(img, xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT, null);
+                
+                g.drawImage(Main.speakerImg, xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT, null);
             } catch(Exception e){
                 g.setColor(REG_COLOR);
                 g.fillRect(xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT);

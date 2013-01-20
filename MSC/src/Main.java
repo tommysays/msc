@@ -29,14 +29,24 @@ public class Main extends JFrame{
 	public static ArrayList<Image> highNotes = new ArrayList<Image>();
 	public static ArrayList<Image> midNotes = new ArrayList<Image>();
 	public static ArrayList<Image> lowNotes = new ArrayList<Image>();
+        public static BufferedImage speakerImg;
+
         public static boolean useCloudMenu = false;
 	public static void main(String[] args) throws IOException, JSONException{
                 frm = new Main();
 		loadLowNotes();
 		loadMidNotes();
 		loadHighNotes();
+                loadSpeaker();
 		frm.start();
 	}
+        private static void loadSpeaker(){
+            try{
+                speakerImg = ImageIO.read(Main.frm.getClass().getResource("images/speaker.png"));
+            } catch(Exception e){
+                System.err.println("Error when loading speaker image.");
+            }
+        }
 	private static void loadLowNotes(){
 		BufferedImage img;
 		int numLowNotes = 6;

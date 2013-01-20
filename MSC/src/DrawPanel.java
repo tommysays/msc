@@ -34,10 +34,6 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
         private int score = 0;
 	private int interval = 20;
         public static boolean[] spawn = {false, false, false};
-
-        private ApiWrapper wrapper;
-        private Connection connection;
-        private Content content;
         private String client_id;
         private String client_secret;
         private String username = "jo.paul.91@gmail.com";
@@ -66,14 +62,6 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	public void start() throws IOException, JSONException{
                 client_id = "59300a92df9799f95258a9ba20992375";
                 client_secret = "1efc4b68c039a18d5ba9305d4ea6a0ba";
-                
-                wrapper = new ApiWrapper(client_id, client_secret, null, null);
-                connection = new Connection(wrapper);
-                content = new Content(wrapper);
-                connection.Connect(username, password);
-                content.getContent();
-                //URL url = new URL(content.getDownloadLink(0));
-                //mp3downloader.download(url, content.getSongTitle(0) + ".mp3");
 		tmr = new Timer();
                 mscTmr = new Timer();
 		task = new TimerTask(){
