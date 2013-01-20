@@ -6,7 +6,7 @@ public class MidBullet extends Bullet{
 		super(x, y, direction, img);
 		BULLET_WIDTH = 15;
 		BULLET_HEIGHT = 25;
-		SPD = 3;
+		SPD = 9;
 	}
         
         @Override

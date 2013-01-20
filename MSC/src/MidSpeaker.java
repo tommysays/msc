@@ -7,13 +7,10 @@ import java.awt.Image;
  * @author Tommy
  */
 public class MidSpeaker extends Speaker{
-	private final Color REG_COLOR = new Color(255, 150, 150);
-	private final double LIMIT = (3.14 / 6);
-	boolean increment = true;
 	public MidSpeaker(int x, int y){
 		setLoc(x, y);
 		counter = 0;
-		angleRate = (3.14 / 80);
+		angleRate = 0;
 	}
 
 	public void spawn(){
