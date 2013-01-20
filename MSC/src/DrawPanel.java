@@ -14,7 +14,9 @@ import java.util.logging.Logger;
 import org.json.JSONException;
 
 public class DrawPanel extends JPanel implements MouseMotionListener{
-	private final Color BG_COLOR = Color.BLACK;
+	private Color BG_COLOR = new Color(0,0,0,20);
+        private Color targetColor = Color.CYAN;
+        private double lastTime = 0;
 	private final Color BOX_COLOR = new Color(200, 220, 255);
 	private final int BOX_WIDTH = 10, BOX_HEIGHT = 10;
 	private int xLoc = 50, yLoc = 50;
@@ -149,6 +151,27 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 		if (yLoc != yDest){
 			yLoc -= (yLoc - yDest) / 3;
 		}
+                
+                //Background logic
+                if (System.currentTimeMillis() - lastTime > 1000) {
+                    targetColor = new Color((int)(Math.random()*127),(int)(Math.random()*127),(int)(Math.random()*127), 20);
+                    lastTime = System.currentTimeMillis();
+                }
+                if (BG_COLOR.getRed() > targetColor.getRed()) {
+                    BG_COLOR = new Color(BG_COLOR.getRed()-1, BG_COLOR.getBlue(),BG_COLOR.getGreen(), 20);
+                } else  {
+                    BG_COLOR = new Color(BG_COLOR.getRed()+1, BG_COLOR.getBlue(),BG_COLOR.getGreen(), 20);
+                }
+                if (BG_COLOR.getGreen() > targetColor.getGreen()) {
+                    BG_COLOR = new Color(BG_COLOR.getRed(), BG_COLOR.getBlue(),BG_COLOR.getGreen()-1, 20);
+                } else  {
+                    BG_COLOR = new Color(BG_COLOR.getRed(), BG_COLOR.getBlue(),BG_COLOR.getGreen()+1, 20);
+                }
+                if (BG_COLOR.getBlue() > targetColor.getBlue()) {
+                    BG_COLOR = new Color(BG_COLOR.getRed(), BG_COLOR.getBlue()-1,BG_COLOR.getGreen(), 20);
+                } else  {
+                    BG_COLOR = new Color(BG_COLOR.getRed(), BG_COLOR.getBlue()+1,BG_COLOR.getGreen(), 20);
+                }
 		repaint();
 	}
 
@@ -178,7 +201,9 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	}
 
 	public void paint(Graphics g){
-		g.setColor(new Color(0,0,0,20));
+		g.setColor(BG_COLOR);
+                System.out.println(BG_COLOR.toString());
+                System.out.println(targetColor.toString());
 		g.fillRect(0,0, this.getWidth(), this.getHeight());
 
 		for (Speaker sp : speakers){
