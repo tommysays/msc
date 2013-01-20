@@ -12,6 +12,7 @@ public class Content
     private String[] stream_url;
     private String download_url;
     private ApiWrapper wrapper;
+    private int total_songs;
      
     public Content(ApiWrapper wrapper) throws IOException
     {
@@ -19,6 +20,7 @@ public class Content
         song_title = new String[MAXTRACKS];
         stream_url = new String[MAXTRACKS];
         download_url = "";
+        total_songs = 0;
     }
     
     public HttpResponse getContent() throws IOException
@@ -31,7 +33,7 @@ public class Content
 
         if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) 
         {
-            System.out.println("\n" + response_string);
+            //System.out.println("\n" + response_string);
             getTrackInfo(response_string);
             
 
@@ -47,7 +49,6 @@ public class Content
     
     public void getTrackInfo(String data)
     {
-        int i = 0;
         int starting_index = 0;             // starting index of the matching string 
         int starting_index_offset;
         int ending_index = 0;
@@ -61,18 +62,18 @@ public class Content
             ending_index = data.indexOf(",", starting_index) - 1;
             
             //System.out.println("\n+++++\n" + starting_index + " hh " + ending_index);
-            stream_url[i] = data.substring(starting_index , ending_index);
-            System.out.println("\n" + stream_url[i]);
+            stream_url[total_songs] = data.substring(starting_index , ending_index);
+            //System.out.println("\n" + stream_url[i]);
             
             starting_index_offset = 10;
             starting_index = data.indexOf(search2, starting_index) + starting_index_offset;
             ending_index = data.indexOf(",", starting_index) - 1;
             
-            song_title[i] = data.substring(starting_index , ending_index);
-            System.out.println("\n" + song_title[i]);
+            song_title[total_songs] = data.substring(starting_index , ending_index);
+            //System.out.println("\n" + song_title[i]);
             
             starting_index = ending_index;
-            i++;
+            total_songs++;
                    
         }
     }
@@ -90,5 +91,10 @@ public class Content
     }
     public String getSongTitle(int index) {
         return song_title[index];
+    }
+    
+    public int getTotalSongs()
+    {
+        return total_songs;
     }
 }
