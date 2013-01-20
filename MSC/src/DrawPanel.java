@@ -1,11 +1,17 @@
+import com.soundcloud.api.*;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.JSONException;
 
 public class DrawPanel extends JPanel implements MouseMotionListener{
 	private final Color BG_COLOR = Color.BLACK;
@@ -24,8 +30,15 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private int counter = 0;
         public static boolean[] spawn = {false, false, false};
 
-
-                                                                                                                                                                                                                                                                                                    
+        private ApiWrapper wrapper;
+        private Connection connection;
+        private Content content;
+        private String client_id;
+        private String client_secret;
+        private String username = "jo.paul.91@gmail.com";
+        private String password = "nim2006";
+                 
+        
 	/**
 	 * Resets the player's position to the center of the screen and clears
 	 * all bullets.
@@ -42,16 +55,33 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	/**
 	 * Starts / unpauses the game. (Starts the timer that runs the game.)
 	 */
-	public void start(){
+	public void start() throws IOException, JSONException{
+                client_id = "59300a92df9799f95258a9ba20992375";
+                client_secret = "1efc4b68c039a18d5ba9305d4ea6a0ba";
+                
+                wrapper = new ApiWrapper(client_id, client_secret, null, null);
+                connection = new Connection(wrapper);
+                content = new Content(wrapper);
+                connection.Connect(username, password);
+                content.getContent();
+                //URL url = new URL(content.getDownloadLink(0));
+                //mp3downloader.download(url, content.getSongTitle(0) + ".mp3");
 		tmr = new Timer();
                 mscTmr = new Timer();
 		task = new TimerTask(){
-			public void run(){tick();}
+			public void run(){try {
+                            tick();
+                        } catch (IOException ex) {
+                            Logger.getLogger(DrawPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (JSONException ex) {
+                            Logger.getLogger(DrawPanel.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+}
 		};
                 musicTask = new TimerTask(){
                     public void run(){
                         AudioToFreq.running = true;
-                        AudioToFreq.PlaySongAndTransform("rawk.mp3");
+                        AudioToFreq.PlaySongAndTransform("party.mp3");
                     }
                 };
 		tmr.schedule(task, 0, interval);
@@ -67,7 +97,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 AudioToFreq.running = false;
 	}
 
-	private void tick(){
+	private void tick() throws IOException, JSONException{
 		for (int i = 0; i < bullets.size(); ++i){
 			Bullet bl = bullets.get(i);
 			int bx = bl.getX();
@@ -98,18 +128,21 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 } else if (spawn[1]){
                     speakers.get(1).spawn();
                     spawn[1] = false;
-                } else if (true){
+                } else if (spawn[2]){
                     speakers.get(2).spawn();
                     speakers.get(3).spawn();
                     spawn[2] = false;
                 }
 		counter++;
-//		if (counter > spawnInterval){
-//			if (spawnLow){
-//                            speakers.get(0).spawn();
-//                        }
-//			counter = 0;
-//		}
+		if (counter > spawnInterval){
+			if (spawn[1]){
+                            speakers.get(1).spawn();
+                        }
+                        if (spawn[2]) {
+                            speakers.get(2).spawn();
+                        }
+			counter = 0;
+		}
 		if (xLoc != xDest){
 			xLoc -= (xLoc - xDest) / 3;
 		}
@@ -145,7 +178,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	}
 
 	public void paint(Graphics g){
-		g.setColor(BG_COLOR);
+		g.setColor(new Color(0,0,0,20));
 		g.fillRect(0,0, this.getWidth(), this.getHeight());
 
 		for (Speaker sp : speakers){

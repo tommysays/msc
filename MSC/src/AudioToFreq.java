@@ -17,7 +17,6 @@ public class AudioToFreq {
     final static int MIN_BIN = 50;
     final static int MAX_BIN = 70;
     public static boolean running = false;
-    private static boolean hasFired = false;
     /**
      * @param args the command line arguments
      */

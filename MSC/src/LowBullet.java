@@ -7,6 +7,7 @@ public class LowBullet extends Bullet{
 		BULLET_WIDTH = 30;
 		BULLET_HEIGHT = 30;
 		SPD = 2;
+                WIND = -0.1;
 	}
 	public void paint(Graphics g){
 		int width = BULLET_WIDTH + 4;
