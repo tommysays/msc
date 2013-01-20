@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -11,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.json.JSONException;
 
 public class DrawPanel extends JPanel implements MouseMotionListener{
@@ -21,13 +24,12 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private int xDest = 50, yDest = 50;
 	private static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	private static ArrayList<Speaker> speakers = new ArrayList<Speaker>();
+        private static File musicFile;
 	private Timer tmr;
         private Timer mscTmr;
 	private TimerTask task;
         private TimerTask musicTask;
 	private int interval = 20;
-	private int spawnInterval = 2;
-	private int counter = 0;
         public static boolean[] spawn = {false, false, false};
 
         private ApiWrapper wrapper;
@@ -48,8 +50,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 		yLoc = (this.getHeight() + BOX_HEIGHT) / 2;
 		xDest = xLoc;
 		yDest = yLoc;
-		bullets = new ArrayList<Bullet>();
-		speakers = new ArrayList<Speaker>();
+		bullets = new ArrayList<>();
+		speakers = new ArrayList<>();
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 musicTask = new TimerTask(){
                     public void run(){
                         AudioToFreq.running = true;
-                        AudioToFreq.PlaySongAndTransform("party.mp3");
+                        AudioToFreq.PlaySongAndTransform(musicFile);
                     }
                 };
 		tmr.schedule(task, 0, interval);
@@ -125,24 +127,19 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 if (spawn[0]) {
                     speakers.get(0).spawn();
                     spawn[0] = false;
-                } else if (spawn[1]){
+                }
+                if (spawn[1]){
                     speakers.get(1).spawn();
+                    System.out.println("midspawn");
                     spawn[1] = false;
-                } else if (spawn[2]){
+                }
+                if (spawn[2]){
                     speakers.get(2).spawn();
                     speakers.get(3).spawn();
                     spawn[2] = false;
                 }
-		counter++;
-		if (counter > spawnInterval){
-			if (spawn[1]){
-                            speakers.get(1).spawn();
-                        }
-                        if (spawn[2]) {
-                            speakers.get(2).spawn();
-                        }
-			counter = 0;
-		}
+                
+                //Cursor movement.
 		if (xLoc != xDest){
 			xLoc -= (xLoc - xDest) / 3;
 		}
@@ -169,27 +166,39 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 		//Top-Middle LowSpeaker.
 		speakers.add(new LowSpeaker(this.getWidth() / 2, 50));
                 //Mid speaker.
-                speakers.add(new MidSpeaker(this.getWidth() * 3 / 4, 150));
+                speakers.add(new MidSpeaker(this.getWidth() / 2, 120));
 		//Two HighSpeakers
 		speakers.add(new HighSpeaker(this.getWidth() / 4, 150));
-		speakers.add(new HighSpeaker(this.getWidth() / 2, 150));
+		speakers.add(new HighSpeaker(this.getWidth() * 3 / 4, 150));
 		
 
 	}
 
 	public void paint(Graphics g){
-		g.setColor(new Color(0,0,0,20));
-		g.fillRect(0,0, this.getWidth(), this.getHeight());
+//            try{
+//                BufferedImage img;
+//                img = ImageIO.read(new File("images/cubism.png"));
+//                g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+//            } catch(Exception e){
+                g.setColor(new Color(0,0,0,20));
+                g.fillRect(0,0, this.getWidth(), this.getHeight());
+//            }
+            
+            
+            
 
-		for (Speaker sp : speakers){
-			sp.paint(g);
-		}
-		for (Bullet bl : bullets){
-			bl.paint(g);
-		}
-		g.setColor(BOX_COLOR);
-		g.fillRect(xLoc - BOX_WIDTH / 2, yLoc - BOX_HEIGHT / 2, BOX_WIDTH, BOX_HEIGHT);
+            for (Speaker sp : speakers){
+            	sp.paint(g);
+            }
+            for (Bullet bl : bullets){
+            	bl.paint(g);
+            }
+            g.setColor(BOX_COLOR);
+            g.fillRect(xLoc - BOX_WIDTH / 2, yLoc - BOX_HEIGHT / 2, BOX_WIDTH, BOX_HEIGHT);
 	}
+        public static void setInputFile(File aFile){
+            musicFile = aFile;
+        }
 	public void mouseMoved(MouseEvent me){
 		xDest = me.getPoint().x - BOX_WIDTH / 2;
 		yDest = me.getPoint().y - BOX_HEIGHT / 2;

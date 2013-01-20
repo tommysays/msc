@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.Toolkit;
 import java.awt.Point;
+import java.awt.CardLayout;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,9 +20,11 @@ public class Main extends JFrame{
 	private final Color BG_COLOR = Color.BLACK;
 	private final Color BOX_COLOR = new Color(200, 220, 255);
 	private final int BOX_WIDTH = 10, BOX_HEIGHT = 10;
-	private static DrawPanel pnl;
+	private static DrawPanel drawPnl;
+        private static MainMenu menuPnl;
 	private static Main frm;
 	private static Cursor blankCursor;
+        private static CardLayout cl;
 	public static ArrayList<Image> highNotes = new ArrayList<Image>();
 	public static ArrayList<Image> midNotes = new ArrayList<Image>();
 	public static ArrayList<Image> lowNotes = new ArrayList<Image>();
@@ -76,19 +79,37 @@ public class Main extends JFrame{
 	}
 
 	public void start() throws IOException, JSONException{
-		setSize(500,750);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
-		createBlankCursor();
-		pnl = new DrawPanel();
-		pnl.addMouseMotionListener(pnl);
-		pnl.setCursor(blankCursor);
-		add(pnl);
-		setVisible(true);
-		pnl.reset();
-		pnl.initSpeakers();
-		pnl.start();
+            CardLayout layout = new CardLayout();
+            setSize(500,750);
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setResizable(false);
+            createBlankCursor();
+            drawPnl = new DrawPanel();
+            drawPnl.addMouseMotionListener(drawPnl);
+            drawPnl.setCursor(blankCursor);
+            menuPnl = new MainMenu();
+            
+            
+            setLayout(cl = new CardLayout());
+            add(menuPnl, "menu");
+            add(drawPnl, "draw");
+            menuPnl.start();
+            setVisible(true);
 	}
+        public static void change(String name){
+            if (name.equals("draw")){
+                drawPnl.reset();
+                drawPnl.initSpeakers();
+                try{
+                    drawPnl.start();
+                } catch(Exception e){
+                    System.err.println("Error when starting drawPnl");
+                }
+            } else if (name.equals("menu")){
+                menuPnl.start();
+            }
+            cl.show(frm.getContentPane(), name);
+        }
 
 	/**
 	 * Initializes the blankCursor.
@@ -99,12 +120,12 @@ public class Main extends JFrame{
 			cursorImg, new Point(0, 0), "blank cursor");
 	}
 	public static void gameOver() throws IOException, JSONException{
-		pnl.reset();
-		pnl.stop();
-		pnl.setCursor(Cursor.getDefaultCursor());
+		drawPnl.reset();
+		drawPnl.stop();
+		drawPnl.setCursor(Cursor.getDefaultCursor());
 		JOptionPane.showMessageDialog(frm, "Game over!\nWhat a noob.");
-		pnl.setCursor(blankCursor);
-		pnl.initSpeakers();
-		pnl.start();
+		drawPnl.setCursor(blankCursor);
+		drawPnl.initSpeakers();
+		drawPnl.start();
 	}
 }

@@ -17,7 +17,7 @@ public class MidSpeaker extends Speaker{
 	}
 
 	public void spawn(){
-		Image img = Main.highNotes.get((int)(Math.random() * Main.highNotes.size()));
+		Image img = Main.midNotes.get((int)(Math.random() * Main.midNotes.size()));
 		DrawPanel.addBullet(new MidBullet(xLoc, yLoc, counter / 2 + (3.14 / 2) + aim, img));
 	}
 }

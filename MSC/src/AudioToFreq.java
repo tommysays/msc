@@ -20,11 +20,11 @@ public class AudioToFreq {
     /**
      * @param args the command line arguments
      */
-    public static void PlaySongAndTransform(String filename) {
+    public static void PlaySongAndTransform(File file) {
         // TODO code application logic here
         running = true;
         try {
-            File file = new File(filename);
+//            File file = new File(filename);
             try (AudioInputStream in = AudioSystem.getAudioInputStream(file)) {
                 AudioInputStream din;
                 AudioFormat baseFormat = in.getFormat();
@@ -147,9 +147,10 @@ public class AudioToFreq {
                 
                 Complex[] result = fft.transform(doubleData, TransformType.FORWARD); //Here's the star of the show
                 
-                minMaxBuffer(MIN_BIN,MAX_BIN, INITIAL_THRESHHOLD, result, 0.85, 0);
-                minMaxBuffer(1200,1220, 400000, result, 0.5, 1);
-                minMaxBuffer(2000,2020, INITIAL_THRESHHOLD, result, 0.5, 2);
+//                minMaxBuffer(0,100, INITIAL_THRESHHOLD, result, 1.0, 0);
+                minMaxBuffer(50,70, INITIAL_THRESHHOLD, result, 1.0, 0);
+                minMaxBuffer(300,350, 400000, result, 0.5, 1);
+                minMaxBuffer(2000,2047, INITIAL_THRESHHOLD, result, .5, 2);
 
                 if (nBytesRead != -1) {
                     nBytesWritten = line.write(data, 0, nBytesRead);
