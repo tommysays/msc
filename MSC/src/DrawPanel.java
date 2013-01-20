@@ -124,7 +124,6 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
                 }
                 if (spawn[1]){
                     speakers.get(1).spawn();
-                    System.out.println("midspawn");
                     spawn[1] = false;
                 }
                 if (spawn[2]){
