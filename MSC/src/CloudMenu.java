@@ -72,20 +72,18 @@ public class CloudMenu extends JPanel implements ActionListener{
         add(localBtn);
         add(cloudBtn);
         add(cloudSelectBtn);
-        //System.out.println("buttons added!");
     }
     public void paint(Graphics g){
         try{
             BufferedImage img;
-            img = ImageIO.read(new File("images/lava.png"));
+            img = ImageIO.read(getClass().getResource("images/lava.png"));
             g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
-            img = ImageIO.read(new File("images/Logo.png"));
+            img = ImageIO.read(getClass().getResource("images/Logo.png"));
             g.drawImage(img, 10, 50, this.getWidth() - 10, 250, null);
             if (loading){
                 for (int i = 0; i < numDots; ++i){
                     g.setColor(new Color(120 + (30 * i), 180, 200));
                     g.fillOval(i * 70 + 125, 270, 40, 40);
-                    System.out.println("loading");
                 }
             }
         } catch(Exception e){
@@ -99,7 +97,6 @@ public class CloudMenu extends JPanel implements ActionListener{
         } else{
             numDots++;
         }
-        System.out.println("tick!");
         repaint();
     }
     public void actionPerformed(ActionEvent ae){
@@ -140,7 +137,6 @@ public class CloudMenu extends JPanel implements ActionListener{
             }
             
             Main.useCloudMenu = true;
-            System.out.println("things");
             Main.change("cloud");
         } else if (command.equals("cloudSelect")){
             String[] names = new String[MainMenu.content.getTotalSongs()];

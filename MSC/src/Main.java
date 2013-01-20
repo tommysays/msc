@@ -31,10 +31,10 @@ public class Main extends JFrame{
 	public static ArrayList<Image> lowNotes = new ArrayList<Image>();
         public static boolean useCloudMenu = false;
 	public static void main(String[] args) throws IOException, JSONException{
+                frm = new Main();
 		loadLowNotes();
 		loadMidNotes();
 		loadHighNotes();
-		frm = new Main();
 		frm.start();
 	}
 	private static void loadLowNotes(){
@@ -42,7 +42,7 @@ public class Main extends JFrame{
 		int numLowNotes = 6;
 		try{
 			for (int i = 1; i <= numLowNotes; ++i){
-				img = ImageIO.read(new File("images/lowNotes/lNote0" + i +
+				img = ImageIO.read(frm.getClass().getResource("images/lowNotes/lNote0" + i +
 									   ".png"));
 				lowNotes.add(img);
 			}
@@ -56,7 +56,7 @@ public class Main extends JFrame{
 		int numMidNotes = 1;
 		try{
 			for (int i = 1; i <= numMidNotes; ++i){
-				img = ImageIO.read(new File("images/midNotes/mNote0" + i +
+				img = ImageIO.read(frm.getClass().getResource("images/midNotes/mNote0" + i +
 									   ".png"));
 				midNotes.add(img);
 			}
@@ -70,7 +70,7 @@ public class Main extends JFrame{
 		int numHighNotes = 6;
 		try{
 			for (int i = 1; i <= numHighNotes; ++i){
-				img = ImageIO.read(new File("images/highNotes/hNote0" + i +
+				img = ImageIO.read(frm.getClass().getResource("images/highNotes/hNote0" + i +
 									   ".png"));
 				highNotes.add(img);
 			}

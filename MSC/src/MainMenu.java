@@ -64,9 +64,9 @@ public class MainMenu extends JPanel implements ActionListener{
     public void paint(Graphics g){
         try{
             BufferedImage img;
-            img = ImageIO.read(new File("images/lava.png"));
+            img = ImageIO.read(getClass().getResource("images/lava.png"));
             g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), null);
-            img = ImageIO.read(new File("images/Logo.png"));
+            img = ImageIO.read(getClass().getResource("images/Logo.png"));
             g.drawImage(img, 10, 50, this.getWidth() - 10, 250, null);
         } catch(Exception e){
             System.err.println("could not load img for main menu");

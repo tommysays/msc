@@ -31,7 +31,7 @@ public abstract class Speaker{
 	public void paint(Graphics g){
             try{
                 BufferedImage img;
-                img = ImageIO.read(new File("images/speaker.png"));
+                img = ImageIO.read(getClass().getResource("images/speaker.png"));
                 g.drawImage(img, xLoc - WIDTH / 2, yLoc - HEIGHT / 2, WIDTH, HEIGHT, null);
             } catch(Exception e){
                 g.setColor(REG_COLOR);
