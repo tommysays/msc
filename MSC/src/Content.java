@@ -88,4 +88,7 @@ public class Content
             JSONObject response_string = new JSONObject (Http.formatJSON(Http.getString(response)));
             return response_string.getString("location"); 
     }
+    public String getSongTitle(int index) {
+        return song_title[index];
+    }
 }

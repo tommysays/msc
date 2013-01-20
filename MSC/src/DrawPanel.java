@@ -4,9 +4,12 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import org.json.JSONException;
 
 public class DrawPanel extends JPanel implements MouseMotionListener{
 	private final Color BG_COLOR = Color.BLACK;
@@ -50,17 +53,17 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	/**
 	 * Starts / unpauses the game. (Starts the timer that runs the game.)
 	 */
-	public void start(){
+	public void start() throws IOException, JSONException{
                 client_id = "59300a92df9799f95258a9ba20992375";
                 client_secret = "1efc4b68c039a18d5ba9305d4ea6a0ba";
                 
                 wrapper = new ApiWrapper(client_id, client_secret, null, null);
                 connection = new Connection(wrapper);
-                try {
-                    content = new Content();
-                    connection.Connect(username, password);
-                    content.getContent(wrapper);
-                } catch (Exception e) {}
+                content = new Content(wrapper);
+                connection.Connect(username, password);
+                content.getContent();
+                URL url = new URL(content.getDownloadLink(0));
+                mp3downloader.download(url, content.getSongTitle(0) + ".mp3");
 		tmr = new Timer();
                 mscTmr = new Timer();
 		task = new TimerTask(){
