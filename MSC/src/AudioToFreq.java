@@ -7,6 +7,7 @@ import java.util.Arrays;
 import javax.sound.sampled.*;
 import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.*;
+import org.json.JSONException;
 
 /**
  *
@@ -41,7 +42,6 @@ public class AudioToFreq {
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             System.err.println("Something happened here.");
-            e.printStackTrace();
         }
     }
     
@@ -84,19 +84,19 @@ public class AudioToFreq {
              if (i > max) {max = i;}
              if (i < min) {min = i;}
         }  
-        testMetric = (max - min)*.25 + min; // This is the number to test against to see if we are in a beat
+        testMetric = (max - min)*difficulty + min; // This is the number to test against to see if we are in a beat
         if (useRealValues == true) {
             if (sum > testMetric && hasFired == false) {
                DrawPanel.spawn[spawnIndex] = true;
                hasFired = true;
-            } else if (sum <= testMetric) {
+            } else if (sum <= testMetric && hasFired == true) {
                DrawPanel.spawn[spawnIndex] = false;
                hasFired = false;
             }
         }else {
-            if (sum > INITIAL_THRESHHOLD && hasFired == false) {
+            if (sum > initialThreshhold && hasFired == false) {
                 DrawPanel.spawn[spawnIndex] = true;
-            } else if (sum <= INITIAL_THRESHHOLD) {
+            } else if (sum <= initialThreshhold) {
                 DrawPanel.spawn[spawnIndex] = false;
                 hasFired = false;
             }
@@ -148,9 +148,9 @@ public class AudioToFreq {
                 Complex[] result = fft.transform(doubleData, TransformType.FORWARD); //Here's the star of the show
                 
 //                minMaxBuffer(0,100, INITIAL_THRESHHOLD, result, 1.0, 0);
-                minMaxBuffer(50,70, INITIAL_THRESHHOLD, result, 1.0, 0);
-                minMaxBuffer(100,120, 400000, result, 0.5, 1);
-                minMaxBuffer(2000,2047, INITIAL_THRESHHOLD, result, .5, 2);
+                minMaxBuffer(50,70, INITIAL_THRESHHOLD, result, 0.5, 0);
+                minMaxBuffer(100,120, INITIAL_THRESHHOLD, result, 0.25, 1);
+                minMaxBuffer(2000,2047, INITIAL_THRESHHOLD, result, .25, 2);
 
                 if (nBytesRead != -1) {
                     nBytesWritten = line.write(data, 0, nBytesRead);
@@ -159,7 +159,7 @@ public class AudioToFreq {
             if (running){
                 try{
                     Main.gameOver();
-                } catch(Exception e){
+                } catch(IOException | JSONException e){
                     System.err.println("Error when ending a won game.");
                 }
             }

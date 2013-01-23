@@ -36,8 +36,6 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
         public static boolean[] spawn = {false, false, false};
         private String client_id;
         private String client_secret;
-        private String username = "jo.paul.91@gmail.com";
-        private String password = "nim2006";
                  
         public int getScore(){
             return score;
