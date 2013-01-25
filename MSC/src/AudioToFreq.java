@@ -15,15 +15,29 @@ import org.json.JSONException;
  */
 public class AudioToFreq {
     final static double INITIAL_THRESHHOLD = 450000.0;
+    final static int BUFFER_SIZE = 30;
     final static int MIN_BIN = 50;
     final static int MAX_BIN = 70;
     public static boolean running = false;
+    
+    private static double[] bassBuffer;
+    private static double[] midBuffer;
+    private static double[] highBuffer;
+    private static int indexTracker = 0;
+    private static boolean useRealValues = false;
     /**
      * @param args the command line arguments
      */
     public static void PlaySongAndTransform(File file) {
         // TODO code application logic here
         running = true;
+        bassBuffer = new double[BUFFER_SIZE];
+        midBuffer = new double[BUFFER_SIZE];
+        highBuffer = new double[BUFFER_SIZE];
+        Arrays.fill(bassBuffer, 0.0);
+        Arrays.fill(midBuffer, 0.0);
+        Arrays.fill(highBuffer, 0.0);
+        
         try {
 //            File file = new File(filename);
             try (AudioInputStream in = AudioSystem.getAudioInputStream(file)) {
@@ -55,18 +69,18 @@ public class AudioToFreq {
     */
     private static void minMaxBuffer(int minBin, int maxBin, 
                                      double initialThreshhold, 
+                                     double[] buffer,
                                      Complex[] fourierTransformed, 
                                      double difficulty,
-                                     int spawnIndex) {
-        double[] minmaxBuffer = new double[15];
+                                     int spawnIndex,
+                                     int indexTracker,
+                                     boolean useRealValues) {
+        
         double min;
         double max;
-        boolean useRealValues = false;
         double testMetric;
-        int nextWriteOver = 0;
         boolean hasFired = false;
         
-        Arrays.fill(minmaxBuffer, 0.0);
         double sum = 0;
         for (int i = minBin; i < maxBin; ++i) {
             sum += Math.sqrt(fourierTransformed[i].getReal()*
@@ -76,11 +90,9 @@ public class AudioToFreq {
         } // This loop is for getting the average strength of a frequency range over the frame.
         sum /= (maxBin - minBin);
         
-        minmaxBuffer[nextWriteOver] = sum;  //This next block of code is for getting the min/max of the last 15 frames
-        ++nextWriteOver;
-        if (nextWriteOver == minmaxBuffer.length) {nextWriteOver = 0; useRealValues = true;}
+        buffer[indexTracker] = sum;  //This next block of code is for getting the min/max of the last 15 frames
         max = 0; min = 800000;
-        for (double i : minmaxBuffer) {
+        for (double i : buffer) {
              if (i > max) {max = i;}
              if (i < min) {min = i;}
         }  
@@ -147,10 +159,11 @@ public class AudioToFreq {
                 
                 Complex[] result = fft.transform(doubleData, TransformType.FORWARD); //Here's the star of the show
                 
-//                minMaxBuffer(0,100, INITIAL_THRESHHOLD, result, 1.0, 0);
-                minMaxBuffer(50,70, INITIAL_THRESHHOLD, result, 0.5, 0);
-                minMaxBuffer(100,120, INITIAL_THRESHHOLD, result, 0.25, 1);
-                minMaxBuffer(2000,2047, INITIAL_THRESHHOLD, result, .25, 2);
+                minMaxBuffer(50,70, INITIAL_THRESHHOLD, bassBuffer, result, .9, 0, indexTracker, useRealValues);
+                minMaxBuffer(100,120, INITIAL_THRESHHOLD, midBuffer, result, .9, 1, indexTracker, useRealValues);
+                minMaxBuffer(2000,2047, INITIAL_THRESHHOLD, highBuffer, result, .9, 2, indexTracker, useRealValues);
+                ++indexTracker;
+                if (indexTracker >= BUFFER_SIZE) {indexTracker = 0; useRealValues = true;}
 
                 if (nBytesRead != -1) {
                     nBytesWritten = line.write(data, 0, nBytesRead);

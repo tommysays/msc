@@ -24,8 +24,8 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 	private final int BOX_WIDTH = 10, BOX_HEIGHT = 10;
 	private int xLoc = 50, yLoc = 50;
 	private int xDest = 50, yDest = 50;
-	private static ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-	private static ArrayList<Speaker> speakers = new ArrayList<Speaker>();
+	private static ArrayList<Bullet> bullets = new ArrayList<>();
+	private static ArrayList<Speaker> speakers = new ArrayList<>();
         private static File musicFile;
 	private Timer tmr;
         private Timer mscTmr;
@@ -65,9 +65,7 @@ public class DrawPanel extends JPanel implements MouseMotionListener{
 		task = new TimerTask(){
 			public void run(){try {
                             tick();
-                        } catch (IOException ex) {
-                            Logger.getLogger(DrawPanel.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (JSONException ex) {
+                        } catch (IOException | JSONException ex) {
                             Logger.getLogger(DrawPanel.class.getName()).log(Level.SEVERE, null, ex);
                         }
 }
